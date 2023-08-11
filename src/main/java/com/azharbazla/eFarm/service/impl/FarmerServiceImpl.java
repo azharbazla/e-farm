@@ -5,15 +5,10 @@ import com.azharbazla.eFarm.repository.FarmerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -37,19 +32,7 @@ public class FarmerServiceImpl implements com.azharbazla.eFarm.service.FarmerSer
 
     @Override
     public Page<Farmer> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Farmer> farmers = farmerRepository.findAll(pageable);
-        List<Farmer> farmersResponses = new ArrayList<>();
-        for (Farmer farmer : farmers.getContent()) {
-            farmersResponses.add(Farmer.builder()
-                    .id(farmer.getId())
-                    .name(farmer.getName())
-                    .address(farmer.getAddress())
-                    .email(farmer.getEmail())
-                    .telephone(farmer.getTelephone())
-                    .build());
-        }
-        return new PageImpl<>(farmersResponses, pageable, farmers.getTotalElements());
+        return farmerRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override

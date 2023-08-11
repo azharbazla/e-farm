@@ -19,8 +19,6 @@ public class Product {
     @Column(name = "product_id", updatable = false)
     private String id;
 
-    private String code;
-
     private String name;
 
     private String description;
@@ -34,7 +32,7 @@ public class Product {
     private Farmer farmer;
 
     @Column(columnDefinition = "int check (price >= 0)")
-    private Integer price;
+    private Long price;
 
     @Column(columnDefinition = "int check (stock >= 0)")
     private Integer stock;

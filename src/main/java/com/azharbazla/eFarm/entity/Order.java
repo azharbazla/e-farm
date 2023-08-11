@@ -24,13 +24,13 @@ public class Order {
     private LocalDateTime transDate;
 
     @ManyToOne
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id", updatable = false)
     private Company company;
 
     @OneToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", updatable = false)
     private Product product;
 
-    @Column(columnDefinition = "int check (quantity > 0)")
+    @Column(columnDefinition = "int check (quantity > 0)", updatable = false)
     private Integer quantity;
 }

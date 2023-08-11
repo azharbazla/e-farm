@@ -38,19 +38,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Page<Company> getAll(Integer page, Integer size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Company> companies = companyRepository.findAll(pageable);
-        List<Company> companiesResponse = new ArrayList<>();
-        for (Company company : companies.getContent()) {
-            companiesResponse.add(Company.builder()
-                    .id(company.getId())
-                    .name(company.getName())
-                    .address(company.getAddress())
-                    .email(company.getEmail())
-                    .telephone(company.getTelephone())
-                    .build());
-        }
-        return new PageImpl<>(companiesResponse, pageable, companies.getTotalElements());
+        return companyRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override
