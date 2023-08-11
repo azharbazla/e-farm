@@ -9,13 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class ProductRequest {
+public class OrderRequest {
     private String id;
-    private String name;
-    private String description;
-    private String category;
-    private String farmerId;
-    private Long price;
-    private Integer stock;
-    private Boolean isActive;
+    private String productId;
+    private String companyId;
+    private Integer quantity;
 }

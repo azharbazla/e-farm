@@ -10,12 +10,16 @@ import com.azharbazla.eFarm.service.FarmerService;
 import com.azharbazla.eFarm.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +52,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> getAll(Integer page, Integer size) {
-        return productRepository.findAll(PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> allProducts = productRepository.findAll(pageable);
+
+        List<Product> activeProducts = allProducts.stream()
+                .filter(Product::getIsActive)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(activeProducts, pageable, activeProducts.size());
     }
 
     @Override
