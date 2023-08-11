@@ -1,5 +1,6 @@
 package com.azharbazla.eFarm.controller;
 
+import com.azharbazla.eFarm.DTO.ProductRequest.OrderRequest;
 import com.azharbazla.eFarm.DTO.response.CommonResponse;
 import com.azharbazla.eFarm.DTO.response.PagingResponse;
 import com.azharbazla.eFarm.entity.Order;
@@ -17,7 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Order request) {
+    public ResponseEntity<?> create(@RequestBody OrderRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(CommonResponse.builder()
                         .statusCode(HttpStatus.CREATED.value())
@@ -53,6 +54,27 @@ public class OrderController {
                         .statusCode(HttpStatus.OK.value())
                         .data(orderService.getById(id))
                         .message("Successfully Get Order")
+                        .build());
+    }
+
+    @GetMapping(path = "/company/{id}")
+    public ResponseEntity<?> getAllByCompanyId(
+            @PathVariable(name = "id") String id,
+            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size
+    ) {
+        Page<Order> orders = orderService.getAllByCompanyId(id, page - 1, size);
+        PagingResponse pagingResponse = PagingResponse.builder()
+                .currentPage(page)
+                .totalPage(orders.getTotalPages())
+                .size(size)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CommonResponse.builder()
+                        .statusCode(HttpStatus.OK.value())
+                        .message("Successfully Get All Orders")
+                        .data(orders.getContent())
+                        .paging(pagingResponse)
                         .build());
     }
 }

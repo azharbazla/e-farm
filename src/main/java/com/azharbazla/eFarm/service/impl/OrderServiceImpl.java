@@ -1,6 +1,6 @@
 package com.azharbazla.eFarm.service.impl;
 
-import com.azharbazla.eFarm.DTO.ProductRequest.ProductRequest;
+import com.azharbazla.eFarm.DTO.ProductRequest.OrderRequest;
 import com.azharbazla.eFarm.entity.*;
 import com.azharbazla.eFarm.repository.OrderRepository;
 import com.azharbazla.eFarm.service.CompanyService;
@@ -29,29 +29,23 @@ public class OrderServiceImpl implements OrderService {
     private final CompanyService companyService;
 
     @Override
-    public Order create(Order order) {
-        Company company = companyService.getById(order.getCompany().getId());
-        order.setTransDate(LocalDateTime.now());
-        order.setCompany(company);
+    public Order create(OrderRequest request) {
+        Order order = new Order();
+        Company company = companyService.getById(request.getCompanyId());
+        Product product = productService.getById(request.getProductId());
 
-        Product product = productService.getById(order.getProduct().getId());
-        ProductRequest productRequest = new ProductRequest();
-
-        if (product.getStock() < order.getQuantity()) {
+        if (product.getStock() < request.getQuantity()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient Stock");
         }
-        product.setStock(product.getStock() - order.getQuantity());
-        if (product.getStock() <= 0) {
-            productService.update(productRequest.toBuilder()
-                    .isActive(false)
-                    .build());
-        } else {
-            productService.update(productRequest.toBuilder()
-                    .stock(product.getStock())
-                    .build());
-        }
+        product.setStock(product.getStock() - request.getQuantity());
+        if (product.getStock() <= 0) product.setIsActive(false);
 
-        return orderRepository.save(order);
+        return orderRepository.saveAndFlush(order.toBuilder()
+                .transDate(LocalDateTime.now())
+                .product(product)
+                .company(company)
+                .quantity(request.getQuantity())
+                .build());
     }
 
     @Override
@@ -59,6 +53,27 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order Not Found"));
     }
+
+    @Override
+    public Page<Order> getAllByCompanyId(String companyId, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Order> orders = orderRepository.findByCompanyId(companyId);
+
+        List<Order> orderResponses = new ArrayList<>();
+        for (Order order : orders) {
+            Order orderResponse = Order.builder()
+                    .id(order.getId())
+                    .transDate(order.getTransDate())
+                    .company(order.getCompany())
+                    .product(order.getProduct())
+                    .quantity(order.getQuantity())
+                    .build();
+            orderResponses.add(orderResponse);
+        }
+
+        return new PageImpl<>(orderResponses, pageable, orders.size());
+    }
+
 
     @Override
     public Page<Order> getAll(Integer page, Integer size) {

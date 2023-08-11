@@ -1,13 +1,13 @@
 package com.azharbazla.eFarm.service;
 
-import com.azharbazla.eFarm.entity.Farmer;
+import com.azharbazla.eFarm.DTO.ProductRequest.OrderRequest;
 import com.azharbazla.eFarm.entity.Order;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 public interface OrderService {
-    Order create(Order order);
-    Order getById(String id);
+    Order create(OrderRequest order);
     Page<Order> getAll(Integer page, Integer size);
+    Order getById(String id);
+    Page<Order> getAllByCompanyId(String id, Integer page, Integer size);
 }
