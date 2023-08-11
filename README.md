@@ -308,3 +308,68 @@ server.error.include-stacktrace=never
     "paging": null
   }
   ```
+
+#### Mengelola data order
+
+- **POST** `/order` : Menambahkan data order baru (Mengurangi stock product sesuai quantity order)
+
+  Request Body :
+
+  ```json
+  {
+    "companyId": "string",
+    "productId": "string",
+    "quantity": "integer"
+  }
+  ```
+
+- **GET** `/order` : Menampilkan semua data order
+- **GET** `order/company/{id}` : Menampilkan semua data order pada satu company (filter dengan query native : company id)
+- **GET** `/order/{id}` : Menampilkan data order berdasarkan id
+
+  Response Body :
+
+  ```json
+  {
+    "statusCode": 200,
+    "message": "Successfully Get All Orders",
+    "data": [
+        {
+            "id": "string",
+            "transDate": "LocalDateTime ",
+            "company": {
+                "id": "string",
+                "name": "string",
+                "address": "string",
+                "telephone": "string",
+                "email": "string"
+            },
+            "product": {
+                "id": "string",
+                "name": "string",
+                "description": "string",
+                "category": {
+                    "id": "string",
+                    "name": "string"
+                },
+                "farmer": {
+                    "id": "string",
+                    "name": "string",
+                    "address": "string",
+                    "telephone": "string",
+                    "email": "string"
+                },
+                "price": "long",
+                "stock": "integer",
+                "isActive": "boolean"
+            },
+            "quantity": "integer"
+        }
+    ],
+    "paging": {
+        "currentPage": 1,
+        "totalPage": 1,
+        "size": 10
+    }
+  }
+  ```
