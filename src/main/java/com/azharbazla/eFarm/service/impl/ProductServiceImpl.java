@@ -46,14 +46,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getById(String id) {
-        return productRepository.findById(id)
+        return productRepository.findByIdProduct(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found"));
     }
 
     @Override
     public Page<Product> getAll(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> allProducts = productRepository.findAll(pageable);
+        Page<Product> allProducts = productRepository.findAllProduct(pageable);
 
         List<Product> activeProducts = allProducts.stream()
                 .filter(Product::getIsActive)
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(ProductRequest request) {
-        Product currentProduct = productRepository.findById(request.getId())
+        Product currentProduct = productRepository.findByIdProduct(request.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product Not Found"));
 
         Category category = categoryService.getOrSave(request.getCategory());

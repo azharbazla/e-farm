@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getById(String id) {
-        return orderRepository.findById(id)
+        return orderRepository.findByIdFarmer(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order Not Found"));
     }
 
@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Page<Order> getAll(Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Order> orders = orderRepository.findAll(pageable);
+        Page<Order> orders = orderRepository.findAllfarmer(pageable);
 
         List<Order> orderResponses = new ArrayList<>();
         for (Order order : orders.getContent()) {

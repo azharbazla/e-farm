@@ -12,7 +12,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     @Override
     public Category getOrSave(String category) {
-        return categoryRepository.findByName(category).orElseGet(
+        return categoryRepository.findByNameCategory(category).orElseGet(
                 () -> categoryRepository.saveAndFlush(Category.builder().name(category).build()));
     }
 }

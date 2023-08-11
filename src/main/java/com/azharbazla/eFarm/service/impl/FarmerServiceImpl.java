@@ -26,18 +26,18 @@ public class FarmerServiceImpl implements com.azharbazla.eFarm.service.FarmerSer
 
     @Override
     public Farmer getById(String id) {
-        return farmerRepository.findById(id)
+        return farmerRepository.findByIdFarmer(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer Not Found"));
     }
 
     @Override
     public Page<Farmer> getAll(Integer page, Integer size) {
-        return farmerRepository.findAll(PageRequest.of(page, size));
+        return farmerRepository.findAllfarmer(PageRequest.of(page, size));
     }
 
     @Override
     public Farmer update(Farmer farmer) {
-        Farmer currentFarmer = farmerRepository.findById(farmer.getId())
+        Farmer currentFarmer = farmerRepository.findByIdFarmer(farmer.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Farmer Not Found"));
 
         if (currentFarmer != null) {

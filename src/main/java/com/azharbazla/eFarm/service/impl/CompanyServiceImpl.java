@@ -6,15 +6,10 @@ import com.azharbazla.eFarm.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,18 +27,18 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Company getById(String id) {
-        return companyRepository.findById(id)
+        return companyRepository.findByIdCompany(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company Not Found"));
     }
 
     @Override
     public Page<Company> getAll(Integer page, Integer size) {
-        return companyRepository.findAll(PageRequest.of(page, size));
+        return companyRepository.findAllCompany(PageRequest.of(page, size));
     }
 
     @Override
     public Company update(Company company) {
-        Company currentCompany = companyRepository.findById(company.getId())
+        Company currentCompany = companyRepository.findByIdCompany(company.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company Not Found"));
 
         if (currentCompany != null) {
